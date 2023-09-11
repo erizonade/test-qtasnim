@@ -108,7 +108,7 @@
         const addModal = () => {
             $("#transaksi").modal("show")
             barangLoop = []
-
+            $(".modal-footer").removeClass('d-none')
             $("#rowTransaksiDetail").removeClass("d-none")
             onLoadBarang()
 
@@ -117,6 +117,7 @@
 
         const detail = (id) => {
             $("#transaksi").modal("show")
+            $(".modal-footer").addClass('d-none')
             $.ajax({
                 type: "GET",
                 url: `${url}/${id}`,
@@ -250,7 +251,7 @@
             barangLoop.forEach((v, i) => {
                 let quantity = ''
                 if (v.status == 0) {
-                    quantity = `<input type="text" oninput="validateInput(this)" min="0" id="quantityEdit_${v.id}" name="quantityEdit"
+                    quantity = `<input type="text" reqeuired oninput="validateInput(this)" min="0" id="quantityEdit_${v.id}" name="quantityEdit"
                                             class="form-control" onkeyup="updateQuantity(this, ${v.id})" value="${v.quantity}" /></td>`
                 } else {
                     quantity = `${v.quantity}`
@@ -262,7 +263,7 @@
                                 <td class="text-center">
                                     ${quantity}
                                 <td>${v.harga}</td>
-                                <td>${v.total}</td>
+                                <td class="total_${v.id}">${v.total}</td>
                                 <td class="bodyNone">`
                 if (v.status == 0) {
                     tbody += `
@@ -288,6 +289,7 @@
                 return
             } else if (e.value != 0) {
                 update.quantity = e.value
+                $(`.total_${update.id}`).html(parseInt(update.quantity) * parseInt(update.harga))
             }
 
         }
