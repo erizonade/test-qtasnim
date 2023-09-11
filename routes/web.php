@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/barang/getAllBarang', [BarangController::class, 'getAllBarang']);
 Route::get('/transaksi/searchTransaksi', [HomeController::class, 'searchTransaksi']);
+Route::get('/transaksi/filterTransaksi', [HomeController::class, 'filterTransaksi']);
 
 /* Resource */
 Route::resource('jenis-barang', JenisBarangController::class)->names('jenis-barang');

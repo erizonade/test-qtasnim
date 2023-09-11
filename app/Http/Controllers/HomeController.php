@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JenisBarang;
 use App\Models\Transaksi;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -27,5 +29,21 @@ class HomeController extends Controller
                           ->get();
 
         return response()->json($transaksi);
+    }
+
+    public function filterTransaksi(Request $request)
+    {
+        $startDate = $request->startDate ?? Carbon::now()->format('Y-m-d');
+        $endDate   = $request->endDate ?? Carbon::now()->format('Y-m-d');
+
+        $data = JenisBarang::join('barang', 'jenis_barang.id', '=', 'barang.jenis_barang_id')
+                           ->leftJoin('transaksi_detail', 'barang.id', '=', 'transaksi_detail.barang_id')
+                           ->leftJoin('transaksi', 'transaksi_detail.transaksi_id', '=', 'transaksi.id')
+                           ->selectRaw('SUM(transaksi_detail.quantity) as jumlah_terjual, jenis_barang.nama as jenis_barang')
+                           ->whereBetween('tanggal_transaksi', [$startDate, $endDate])
+                           ->orderBy('jumlah_terjual', 'DESC')
+                           ->groupBy('jenis_barang.nama')
+                           ->get();
+        return response()->json($data);
     }
 }
