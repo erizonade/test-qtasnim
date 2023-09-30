@@ -15,3 +15,7 @@ f. Jalankan perintah php artisan migrate --seed untuk menjalankan migrasi databa
 g. Jalankan perintah php artisan serve untuk menjalankan server pengembangan Laravel.
 
 h. Akses proyek melalui browser di alamat http://localhost:8000.
+
+#User Login
+email : admin@gmail.com
+password :  123123
