@@ -1,86 +1,107 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container">
-        <div class="card">
-            <div class="card-body">
-                <h3 style="text-decoration: underline">Result Transaksi</h3>
-                <div class="row mt-4">
-                    <div class="col-md-7 mb-3">
-                        <label class="form-label" for="urut_column">Urutkan Berdasar</label>
-                        <select id="urut_column" name="urut_column" class="select2 form-select">
-                            <option value="0">Nama Barang</option>
-                            <option value="1">Tanggal Transaksi</option>
+    <div class="row mx-2">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Produk</h4>
+                    <div class="card-tools">
+
+                        <select name="jenis_id" id="jenis_id" onchange="onloadBarang(this.value)" class="form-control">
+                            <option value="">Pilih Jenis Barang</option>
+                            @foreach ($jenis as $item)
+                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                            @endforeach
                         </select>
                     </div>
-
-                    <div class="col-3 mb-3">
-                        <label for="sequence" class="form-label">Cari</label>
-                        <input type="text" id="search" name="search" class="form-control" placeholder="cari" />
-                    </div>
-
-
-                    <div class="col-2 d-flex align-items-center typeButton">
-                        <button type="button" class="btn btn-info mt-3" onclick="cariTransaksi(event)">Cari</button>
-                    </div>
                 </div>
-                <div class="row">
-                    <div class="card">
-                        <div class="card-body">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama Barang</th>
-                                        <th>Stok</th>
-                                        <th>Jumlah Terjual</th>
-                                        <th>Tanggal Transaksi</th>
-                                        <th>Jenis Barang</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbLoadHasil"></tbody>
-                            </table>
-                        </div>
+                <div class="card-body">
+
+                    <div class="row" id="produk-all">
                     </div>
+
+                    <div class="row justify-content-center " id="pagination">
+                        {{-- {{ $paginator->links() }} --}}
+                    </div>
+
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="container mt-5">
-        <div class="card">
-            <div class="card-body">
-                <h3 style="text-decoration: underline">Pembandingan Transaksi</h3>
-                <div class="row mt-4">
-                    <div class="col-4 mb-3">
-                        <label for="startDate" class="form-label">Mulai Tanggal</label>
-                        <input type="date" id="startDate" value="{{ date('Y-m-d') }}"  name="startDate" class="form-control" placeholder="cari" />
-                    </div>
-
-                    <div class="col-4 mb-3">
-                        <label for="endDate" class="form-label">Akhir Tanggal</label>
-                        <input type="date" id="endDate" value="{{ date('Y-m-d') }}" name="endDate" class="form-control" placeholder="cari" />
-                    </div>
-
-
-                    <div class="col-2 d-flex align-items-center typeButton">
-                        <button type="button" class="btn btn-info mt-3" onclick="fileTransaksi(event)">Cari</button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="card">
-                        <div class="card-body">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Jenis Barang</th>
-                                        <th>Jumlah Terjual</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbLoadFilter"></tbody>
-                            </table>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <h4>Cart</h4>
+                        <div class="text-right">
+                            <h3 id="nomorInvoice">{{ invoice() }}</h3>
+                            <p>Tanggal Transaksi : {{ now()->toDateString() }}</p>
                         </div>
                     </div>
+
+                </div>
+                <div class="card-body">
+
+                    <table class="table table-striped table-md">
+                        <thead>
+                            <tr>
+                                <th width="15%">Jenis Barang</th>
+                                <th width="25%">Barang</th>
+                                <th width="10%" style="text-align: center">Stok</th>
+                                <th width="10%" style="text-align: center">Quantity</th>
+                                <th width="10%" style="text-align: center">Harga</th>
+                                <th width="10%" style="text-align: center">Total</th>
+                                <th width="10%"><i class="fas fa-trash"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail-produk">
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td>
+                                    <div class="d-flex">
+                                        <span class="mr-3">Total Produk &nbsp;</span>
+                                        <span  id="total-produk"> 0</span>
+                                    </div>
+                                </td>
+                                <td colspan="3"></td>
+                                <td>Total Bayar</td>
+                                <td class="total-akhir">0</td>
+                                <td ></td>
+                            </tr>
+
+                        </tfoot>
+                    </table>
+                    <div class="row float-right">
+
+                        <form id="formTransaksi">
+                            <div class="col-12">
+                                <div class="card-body">
+
+                                    <div class="form-group">
+                                        <label for="">Bayar</label>
+                                        <input type="text" name="bayar" oninput="validateInput(this)" min="0" onkeyup="bayarOrder(event, this.value)" id="bayar" class="form-control text-right">
+                                    </div>
+
+
+                                    <label for="">Kembalian</label>
+                                    <input type="text" disabled name="kembalian" id="kembalian" class="form-control">
+
+                                </div>
+                                <div class="card-body">
+                                    <button type="submit" form="formTransaksi" class="btn btn-success btn-login form-control formTransaksi">Proses</button>
+                                    <div class="d-flex justify-content-center d-none loading"><i class="fas fa-spinner fa-2x fa-spin"></i></div>
+
+                                </div>
+
+                            </div>
+                        </form>
+
+
+                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -89,64 +110,206 @@
 
 @section('scripts')
     <script>
-        const cariTransaksi = (event) => {
-            let search = $('#search').val();
-            let column = $('#urut_column').val();
+        const onloadBarang = (id) => {
             $.ajax({
                 type: "GET",
-                url: "/transaksi/searchTransaksi",
+                url: "/barang/getAllBarang",
                 data: {
-                    search: search,
-                    column: column
+                    jenis_id: id
+                },
+                beforeSend : function () {
+                    myswalloading()
                 },
                 success: function(response) {
-                    let html = ''
-                    response.forEach((val, index) => {
-                        html += `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${val.nama_barang}</td>
-                            <td>${val.stok}</td>
-                            <td>${val.jumlah_terjual}</td>
-                            <td>${val.tanggal_transaksi}</td>
-                            <td>${val.jenis_barang}</td>
-                        </tr>
-                        `
-                    });
-                    $("#tbLoadHasil").html(html)
+                    Swal.close()
+
+                    let option = ''
+                    response.forEach(val => {
+                        option +=`<div class="col-md-4">
+                                    <div class="card shadow-sm p-1  bg-white rounded" style="margin-top: 5%;">
+                                        <img class="card-img-top" style="border-radius: 10%;"  width="100px" height="150px" onerror="this.onerror=null; this.src='no_image.png'" src="storage/barang/${val.foto_barang}" alt="Card image cap">
+                                        <div class="card-body">
+                                        <span style="font-size: 12px">${val.nama_barang} (Stok ${val.stok})</span>
+                                        <br>
+                                        <b class="card-link">Rp. ${val.harga}</b>
+                                        <b class="card-link float-right"></b>
+                                        </div>
+
+                                        <button class="btn btn-outline-primary addCart" data-barang="${val.harga}|${val.jenis_barang.nama}|${val.stok}|${val.nama_barang}" data-id="${val.id}" onclick="addTransaksiDetail(event, this)">+ AddCart</button>
+                                    </div>
+
+                                </div>`
+                    })
+
+                    $("#produk-all").html(option)
+                }
+            });
+        }
+
+        let barangLoop = []
+        const addTransaksiDetail = async (event, thisdata) => {
+            let barangId = $(thisdata).data("id")
+            const [harga, jenis_barang, stok, nama_barang] = $(thisdata).data("barang").split("|")
+
+            const check = barangLoop.find(v => v.id == barangId)
+            if (check) {
+                let quantity  = 1 + check.quantity
+                if (parseInt(check.stok) < parseInt(quantity)) {
+                    responSwalAlert('end', 'error','Stok tidak mencukupi, jika input melebih stok maka di kembalikan ke jumlah stok')
+                    return
+                } else if (quantity != 0) {
+                    check.quantity = quantity
+                }
+            } else {
+                barangLoop.push({
+                    id: barangId,
+                    quantity: 1,
+                    harga: harga,
+                    total: parseInt(1 + harga),
+                    jenis_barang: jenis_barang,
+                    stok: stok,
+                    status : 0,
+                    nama_barang: nama_barang
+                })
+
+            }
+            await onLoadCart()
+        }
+
+        $("#formTransaksi").submit(function (e) {
+            e.preventDefault()
+            saveForm()
+        })
+
+        const saveForm = () => {
+            removeXhr()
+
+            let sum   = barangLoop.reduce((v, i) => v + parseFloat(i.total), 0)
+            let bayar = parseInt($("#bayar").val())
+
+            if (bayar < sum) {
+                responSwalAlert('end', 'warning', 'Bayar kurang dari total transaksi')
+                return
+            }
+
+            if (barangLoop.length < 1) return responSwalAlert('end', 'warning', 'Cart kosong')
+
+            $.ajax({
+                type: "POST",
+                url: '/transaksi',
+                data: {
+                    transaksiBarang: barangLoop
+                },
+                beforeSend: function() {
+                    $(".loading").removeClass("d-none")
+                    $(".formTransaksi").addClass("d-none")
+                },
+                error: function(xhr) {
+                    handleErrorXhr(xhr)
+                },
+                success: function(response) {
+                    if (response.status == 200) {
+                        $(".loading").addClass("d-none")
+                        $(".formTransaksi").removeClass("d-none")
+
+                        responSwalAlert('end', 'success', response.message)
+                        loadInvoice()
+
+                        barangLoop = []
+                        onLoadCart()
+
+                        $("#bayar").val(0)
+                        $("#kembalian").val(0)
+
+                    } else {
+                        responSwalAlert('end', 'error', response.message)
+
+                        $(".loading").addClass("d-none")
+                        $(".formTransaksi").removeClass("d-none")
+                    }
+                },
+            });
+        }
+
+        const bayarOrder = (event, value) => {
+            let sum  = barangLoop.reduce((v, i) => v + parseFloat(i.total), 0)
+
+            let kembalian = 0
+            if (value > sum) kembalian = value - sum
+            if (sum > value) kembalian = 0
+
+            $("#kembalian").val(kembalian)
+
+        }
+
+        const updateQuantity = (e, id) => {
+            let update = barangLoop.find(v => v.id == id)
+
+            if (parseInt(update.stok) < parseInt(e.value)) {
+                update.quantity = update.stok
+                $(`#quantityEdit_${id}`).val(update.stok)
+                responSwalAlert('end', 'error',
+                    'Stok tidak mencukupi, jika input melebih stok maka di kembalikan ke jumlah stok')
+                return
+            } else if (e.value != 0) {
+                update.quantity = e.value
+                $(`.total_${update.id}`).html(parseInt(update.quantity) * parseInt(update.harga))
+            }
+
+        }
+
+        const deleteDetailTransaksi = (id) => {
+            barangLoop = barangLoop.filter(v => v.id != id)
+            onLoadCart()
+        }
+
+        const onLoadCart = () => {
+            let tbody = ''
+            barangLoop.forEach((v, i) => {
+                let quantity = ''
+                if (v.status == 0) {
+                    quantity =
+                        `<input type="text" reqeuired oninput="validateInput(this)" min="0" id="quantityEdit_${v.id}" name="quantityEdit"
+                                            class="form-control" onkeyup="updateQuantity(this, ${v.id})" value="${v.quantity}" /></td>`
+                } else {
+                    quantity = `${v.quantity}`
+                }
+                tbody += `<tr class="row${v.id}">
+                                <td>${v.jenis_barang}</td>
+                                <td>${v.nama_barang}</td>
+                                <td>${v.stok}</td>
+                                <td class="text-center">
+                                    ${quantity}
+                                <td>${v.harga}</td>
+                                <td class="total_${v.id}">${v.total}</td>
+                                <td class="bodyNone">`
+                if (v.status == 0) {
+                    tbody += `
+                                    <button type="button" class="btn btn-icon btn-danger" onclick="deleteDetailTransaksi(${v.id})">
+                                        <span class="tf-icons bx bx-trash">Hapus</span>
+                                    </button>`
+                }
+                tbody += `</td>
+                  </tr>`
+            });
+
+            $("#detail-produk").html(tbody)
+            $("#total-produk").html(barangLoop.length)
+            $(".total-akhir").html(barangLoop.reduce((v, i) => v + parseFloat(i.total), 0))
+        }
+
+        const loadInvoice = () => {
+            $.ajax({
+                type: "GET",
+                url: "/transaksi/invoice",
+                success: function(response) {
+                    $("#nomorInvoice").html(response)
                 }
             })
         }
 
-        const fileTransaksi = () => {
-            let startDate = $('#startDate').val();
-            let endDate = $('#endDate').val();
-            $.ajax({
-                type: "GET",
-                url: "/transaksi/filterTransaksi",
-                data: {
-                    startDate: startDate,
-                    endDate: endDate
-                },
-                success: function(response) {
-                    let html = ''
-                    response.forEach((val, index) => {
-                        html += `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${val.jenis_barang}</td>
-                            <td>${val.jumlah_terjual}</td>
-                        </tr>
-                        `
-                    });
-                    $("#tbLoadFilter").html(html)
-                }
-            })
-        }
-
-        $(function() {
-            cariTransaksi()
-            fileTransaksi()
+        $(function () {
+            onloadBarang(null)
         })
     </script>
 @endsection

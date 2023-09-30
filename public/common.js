@@ -42,7 +42,6 @@ const handleErrorXhr = (xhr) => {
             let resRequired = val[1].find((message) => {
                 return message.includes('required')
             })
-            console.info(val[0])
             $(`#${val[0]}`).closest('div').append(`<div class="${'text text-danger'}">${val[1]}</div>`)
         });
     } else {
@@ -61,4 +60,13 @@ const checkValue = (dataValue) => {
     let check = (dataValue == undefined || dataValue == 0 || dataValue == 'null' || dataValue == null ||
         dataValue == '')
     return check
+}
+
+const myswalloading = (title = 'Loading', text = 'Harap tunggu...') => {
+    return Swal.fire({
+        title: title,
+        html: '<div class="spinner-grow spinner-grow-sm text-dark mb-1" role="status"><span class="sr-only">Loading...</span> </div><div class="spinner-grow spinner-grow-sm text-dark mb-1" role="status"><span class="sr-only">Loading...</span> </div><div class="spinner-grow spinner-grow-sm text-dark mb-1" role="status"><span class="sr-only">Loading...</span> </div><br> ' + text,
+        showConfirmButton: false,
+        allowOutsideClick: false,
+    })
 }

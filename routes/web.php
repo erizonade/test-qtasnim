@@ -3,6 +3,7 @@
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JenisBarangController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransaksiController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,12 +18,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class, 'index']);
-Route::get('/barang/getAllBarang', [BarangController::class, 'getAllBarang']);
-Route::get('/transaksi/searchTransaksi', [HomeController::class, 'searchTransaksi']);
-Route::get('/transaksi/filterTransaksi', [HomeController::class, 'filterTransaksi']);
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+    Route::get('/barang/getAllBarang', [BarangController::class, 'getAllBarang']);
+    Route::get('/transaksi/searchTransaksi', [HomeController::class, 'searchTransaksi'])->name('searchTransaksi');
+    Route::get('/transaksi/filterTransaksi', [HomeController::class, 'filterTransaksi'])->name('filterTransaksi');
+    Route::get('/transaksi/invoice', [TransaksiController::class, 'numberInvoice']);
 
-/* Resource */
-Route::resource('jenis-barang', JenisBarangController::class)->names('jenis-barang');
-Route::resource('barang', BarangController::class)->names('barang');
-Route::resource('transaksi', TransaksiController::class)->names('transaksi')->only(['index', 'store', 'show']);
+    /* Resource */
+    Route::resource('jenis-barang', JenisBarangController::class)->names('jenis-barang');
+    Route::resource('barang', BarangController::class)->names('barang');
+    Route::resource('transaksi', TransaksiController::class)->names('transaksi')->only(['index', 'store', 'show']);
+
+});
+
+require __DIR__.'/auth.php';

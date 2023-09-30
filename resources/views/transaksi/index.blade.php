@@ -6,7 +6,7 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between">
                         <h3>Transaksi</h3>
-                        <button class="btn btn-sm btn-info" onclick="addModal()">Tambah</button>
+                        {{-- <button class="btn btn-sm btn-info" onclick="addModal()">Tambah</button> --}}
                     </div>
                 </div>
                 <div class="card-body">
@@ -88,7 +88,7 @@
                                         <th width="10%" style="text-align: center">Quantity</th>
                                         <th width="10%" style="text-align: center">Harga</th>
                                         <th width="10%" style="text-align: center">Total</th>
-                                        <th width="10%" class="actionNone" style="text-align: center">Action</th>
+                                        {{-- <th width="10%" class="actionNone" style="text-align: center">Action</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyTransaksiDetail" class="table-border-bottom-0">
@@ -263,15 +263,15 @@
                                 <td class="text-center">
                                     ${quantity}
                                 <td>${v.harga}</td>
-                                <td class="total_${v.id}">${v.total}</td>
-                                <td class="bodyNone">`
-                if (v.status == 0) {
-                    tbody += `
-                                    <button type="button" class="btn btn-icon btn-danger" onclick="deleteDetailTransaksi(${v.id})">
-                                        <span class="tf-icons bx bx-trash">Hapus</span>
-                                    </button>`
-                }
-                tbody += `</td>
+                                <td class="total_${v.id}">${v.total}</td>`
+                //                 <td class="bodyNone">`
+                // if (v.status == 0) {
+                //     tbody += `
+                //                     <button type="button" class="btn btn-icon btn-danger" onclick="deleteDetailTransaksi(${v.id})">
+                //                         <span class="tf-icons bx bx-trash">Hapus</span>
+                //                     </button></td>`
+                // }
+                tbody += `
                   </tr>`
             });
 

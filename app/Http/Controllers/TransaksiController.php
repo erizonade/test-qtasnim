@@ -74,4 +74,9 @@ class TransaksiController extends Controller
         $data = Transaksi::with(['transaksiDetail.barang.jenisBarang'])->where('id', $id)->first();
         return response()->json($data);
     }
+
+    public function numberInvoice()
+    {
+        return invoice();
+    }
 }

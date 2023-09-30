@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Barang;
 use App\Models\JenisBarang;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -57,6 +58,11 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+        User::insert([
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('123123')
+        ]);
 
     }
 }

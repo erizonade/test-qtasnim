@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('jenis_barang_id')->constrained('jenis_barang')->onDelete('cascade');
             $table->string('nama_barang', 150);
+            $table->string('foto_barang', 150)->nullable();
             $table->integer('stok');
             $table->double('harga');
             $table->timestamps();
