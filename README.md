@@ -21,6 +21,11 @@ email : admin@gmail.com
 password :  123123
 
 
-##SCREEN##
 ##LOGIN##
 ![image](https://github.com/erizonade/test-qtasnim/assets/47268749/880cd0bb-a8f4-49fc-98c3-be9aa3b91223)
+
+<br>
+
+##DASHBOARD##
+![image](https://github.com/erizonade/test-qtasnim/assets/47268749/7c9be6fd-6502-411d-9b4b-92296d0aaf9f)
+
